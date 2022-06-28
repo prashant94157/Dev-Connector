@@ -8,10 +8,9 @@ const config = require('config');
 
 const User = require('../../models/User');
 
-// @route GET api/users
-// @desc  TEST route
-// @access Public
-
+// @route    POST api/users
+// @desc     Register User
+// @access   Public
 router.post(
   '/',
   [
@@ -36,11 +35,7 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: 'User already exists' }] });
       }
-      const avatar = gravatar.url(email, {
-        s: '200',
-        r: 'pg',
-        d: 'mm',
-      });
+      const avatar = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' }, true);
       user = new User({
         name,
         email,

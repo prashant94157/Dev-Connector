@@ -3,12 +3,15 @@ const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const request = require('request');
+const config = require('config');
 
 const { check, validationResult } = require('express-validator');
-const config = require('config');
 
 const router = express.Router();
 
+// @route    GET api/profile/me
+// @desc     Get current users profile
+// @access   Private
 router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
@@ -20,12 +23,16 @@ router.get('/me', auth, async (req, res) => {
         msg: 'There is no profile for this user',
       });
     }
+    res.json(profile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
 
+// @route    POST api/profile
+// @desc     Create or Update User Profile
+// @access   Private
 router.post(
   '/',
   [
@@ -59,6 +66,7 @@ router.post(
       //...rest
     } = req.body;
 
+    //Build profile object
     const profilefields = {};
     profilefields.user = req.user.id;
     if (company) profilefields.company = company;
@@ -85,14 +93,15 @@ router.post(
 
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {
+        //update
         profile = await Profile.findOneAndUpdate(
           { user: req.user.id },
-          { $set: profileFields },
+          { $set: profilefields },
           { new: true }
         );
         return res.json(profile);
       }
-
+      //create
       profile = new Profile(profilefields);
 
       await profile.save();
@@ -104,6 +113,9 @@ router.post(
   }
 );
 
+// @route    GET api/profile
+// @desc     Get all profiles
+// @access   Public
 router.get('/', async (req, res) => {
   try {
     const profiles = await Profile.find().populate('user', ['name', 'avatar']);
@@ -114,7 +126,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get user by profile_id
+// @route    GET api/profile/user/:user_id
+// @desc     Get profile by user_id
+// @access   Public
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
@@ -135,11 +149,15 @@ router.get('/user/:user_id', async (req, res) => {
   }
 });
 
-// delete profile, user & posts
+// @route    Delete api/profile
+// @desc     Delete profile, user & posts
+// @access   Private
 router.delete('/', auth, async (req, res) => {
   try {
+    //remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
-    await Profile.findOneAndRemove({ _id: req.user.id });
+    //remove user
+    await User.findOneAndRemove({ _id: req.user.id });
     res.json({ msg: 'user deleted' });
   } catch (err) {
     console.error(err.message);
@@ -147,6 +165,9 @@ router.delete('/', auth, async (req, res) => {
   }
 });
 
+// @route    PUT api/profile/experience
+// @desc     Add experience
+// @access   Private
 router.put(
   '/experience',
   [
@@ -185,6 +206,9 @@ router.put(
   }
 );
 
+// @route    Delete api/profile/experience/:ex_id
+// @desc     Delete experience by ex_id
+// @access   Private
 router.delete('/experience/:ex_id', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id });
@@ -204,6 +228,9 @@ router.delete('/experience/:ex_id', auth, async (req, res) => {
   }
 });
 
+// @route    PUT api/profile/education
+// @desc     Add education
+// @access   Private
 router.put(
   '/education',
   [
@@ -243,6 +270,9 @@ router.put(
   }
 );
 
+// @route    Delete api/profile/education/:ed_id
+// @desc     Delete education by ed_id
+// @access   Private
 router.delete('/education/:ed_id', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id });
@@ -262,6 +292,9 @@ router.delete('/education/:ed_id', auth, async (req, res) => {
   }
 });
 
+// @route    GET api/profile/github/:username
+// @desc     Get user repos from github
+// @access   Public
 router.get('/github/:username', (req, res) => {
   try {
     const options = {
