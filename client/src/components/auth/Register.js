@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setAlert } from '../../action/alert';
-import { register } from '../../action/auth';
+import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
 import PropTypes from 'prop-types';
 
@@ -13,9 +13,12 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     password: '',
     password2: '',
   });
+
   const onChangeHandler = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
   const { name, email, password, password2 } = formData;
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (password !== password2) {
@@ -28,21 +31,21 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   if (isAuthenticated) {
     return <Navigate to='/dashboard' />;
   }
-  
+
   return (
     <section className='container'>
       <h1 className='large text-primary'>Sign Up</h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Create Your Account
       </p>
-      <form className='form' onSubmit={(e) => onSubmit(e)}>
+      <form className='form' onSubmit={onSubmit}>
         <div className='form-group'>
           <input
             type='text'
             placeholder='Name'
             name='name'
             value={name}
-            onChange={(e) => onChangeHandler(e)}
+            onChange={onChangeHandler}
             required
           />
         </div>
@@ -52,7 +55,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             placeholder='Email Address'
             name='email'
             value={email}
-            onChange={(e) => onChangeHandler(e)}
+            onChange={onChangeHandler}
             required
           />
           <small className='form-text'>
@@ -66,7 +69,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             placeholder='Password'
             name='password'
             value={password}
-            onChange={(e) => onChangeHandler(e)}
+            onChange={onChangeHandler}
             required
             minLength='6'
           />
@@ -77,7 +80,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             placeholder='Confirm Password'
             name='password2'
             value={password2}
-            onChange={(e) => onChangeHandler(e)}
+            onChange={onChangeHandler}
             required
             minLength='6'
           />

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { deleteExperience } from '../../action/profile';
+import { deleteExperience } from '../../actions/profile';
+import formatDate from '../../utils/formatDate';
 
 const Experience = ({ experience, deleteExperience }) => {
   const experiences = experience.map((exp) => (
@@ -10,26 +10,22 @@ const Experience = ({ experience, deleteExperience }) => {
       <td>{exp.company}</td>
       <td className='hide-sm'>{exp.title}</td>
       <td>
-        <Moment format='YYYY/MM/DD'>{exp.from}</Moment> -{' '}
-        {exp.to === null ? (
-          'Now'
-        ) : (
-          <Moment format='YYYY/MM/DD'>{exp.to}</Moment>
-        )}
+        {formatDate(exp.from)} - {exp.to ? formatDate(exp.to) : 'Now'}
       </td>
       <td>
         <button
-          className='btn btn-danger'
           onClick={() => deleteExperience(exp._id)}
+          className='btn btn-danger'
         >
           Delete
         </button>
       </td>
     </tr>
   ));
+
   return (
-    <div className='container'>
-      <h2 className='my-2'>Experience Credentails</h2>
+    <Fragment>
+      <h2 className='my-2'>Experience Credentials</h2>
       <table className='table'>
         <thead>
           <tr>
@@ -41,7 +37,7 @@ const Experience = ({ experience, deleteExperience }) => {
         </thead>
         <tbody>{experiences}</tbody>
       </table>
-    </div>
+    </Fragment>
   );
 };
 

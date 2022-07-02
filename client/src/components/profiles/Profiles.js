@@ -2,13 +2,14 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
-import { getProfiles } from '../../action/profile';
+import { getProfiles } from '../../actions/profile';
 import ProfileItem from './ProfileItem';
 
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
     getProfiles();
   }, [getProfiles]);
+
   return (
     <section className='container'>
       {loading ? (
@@ -26,7 +27,7 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
                 <ProfileItem key={profile._id} profile={profile} />
               ))
             ) : (
-              <h4>hjhj</h4>
+              <h4>No profiles found...</h4>
             )}
           </div>
         </Fragment>

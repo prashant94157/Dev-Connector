@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addExperience } from '../../action/profile';
+import { addExperience } from '../../actions/profile';
 
 const AddExperience = ({ addExperience }) => {
   const [formData, setFormData] = useState({
@@ -14,8 +14,6 @@ const AddExperience = ({ addExperience }) => {
     to: '',
     description: '',
   });
-
-  const [toDateDisabled, toggleDisabled] = useState(false);
 
   const { title, company, location, from, current, to, description } = formData;
 
@@ -84,7 +82,6 @@ const AddExperience = ({ addExperience }) => {
               value={current}
               onChange={(e) => {
                 setFormData({ ...formData, current: !current });
-                toggleDisabled(!toDateDisabled);
               }}
             />{' '}
             Current Job
@@ -97,7 +94,7 @@ const AddExperience = ({ addExperience }) => {
             name='to'
             value={to}
             onChange={(e) => onChange(e)}
-            disabled={toDateDisabled ? 'disabled' : ''}
+            disabled={current}
           />
         </div>
         <div className='form-group'>

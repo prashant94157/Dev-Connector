@@ -150,13 +150,11 @@ img {
 
 .alert {
   padding: 0.8rem;
-  margin: 4rem 0 0 0;
+  margin: 1rem 0;
   opacity: 0.9;
   background: var(--light-color);
   color: #333;
 }
-
-
 
 .btn-primary,
 .bg-primary,
@@ -576,4 +574,11 @@ button {
   .post button {
     padding: 0.3rem 0.4rem;
   }
+}
+
+.alert-wrapper {
+  position: fixed;
+  top: 4rem;
+  right: 2rem;
+  display: inline-block;
 }

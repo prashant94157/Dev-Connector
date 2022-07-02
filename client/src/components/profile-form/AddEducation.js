@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addEducation } from '../../action/profile';
+import { addEducation } from '../../actions/profile';
 
 const AddEducation = ({ addEducation }) => {
   const [formData, setFormData] = useState({
@@ -14,8 +14,6 @@ const AddEducation = ({ addEducation }) => {
     to: '',
     description: '',
   });
-
-  const [toDateDisabled, toggleDisabled] = useState(false);
 
   const { school, degree, fieldofstudy, from, current, to, description } =
     formData;
@@ -85,7 +83,6 @@ const AddEducation = ({ addEducation }) => {
               value={current}
               onChange={(e) => {
                 setFormData({ ...formData, current: !current });
-                toggleDisabled(!toDateDisabled);
               }}
             />{' '}
             Current School
@@ -98,7 +95,7 @@ const AddEducation = ({ addEducation }) => {
             name='to'
             value={to}
             onChange={(e) => onChange(e)}
-            disabled={toDateDisabled ? 'disabled' : ''}
+            disabled={current}
           />
         </div>
         <div className='form-group'>

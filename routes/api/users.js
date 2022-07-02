@@ -5,6 +5,7 @@ const gravatar = require('gravatar');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const normalize = require('normalize-url');
 
 const User = require('../../models/User');
 
@@ -13,14 +14,13 @@ const User = require('../../models/User');
 // @access   Public
 router.post(
   '/',
-  [
-    check('name', 'Name is required').not().isEmpty(),
-    check('email', 'Please include a valid Email').isEmail(),
-    check(
-      'password',
-      'Password is required with atleast 6 characters'
-    ).isLength({ min: 6 }),
-  ],
+
+  check('name', 'Name is required').not().isEmpty(),
+  check('email', 'Please include a valid Email').isEmail(),
+  check('password', 'Password is required with atleast 6 characters').isLength({
+    min: 6,
+  }),
+
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,7 +35,14 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: 'User already exists' }] });
       }
-      const avatar = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' }, true);
+      const avatar = normalize(
+        gravatar.url(email, {
+          s: '200',
+          r: 'pg',
+          d: 'mm',
+        }),
+        { forceHttps: true }
+      );
       user = new User({
         name,
         email,
@@ -58,7 +65,7 @@ router.post(
         payload,
         config.get('jwtSecret'),
         {
-          expiresIn: 360000,
+          expiresIn: '5 days',
         },
         (err, token) => {
           if (err) throw err;

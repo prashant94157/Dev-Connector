@@ -1,11 +1,12 @@
 import {
   CLEAR_PROFILE,
   GET_PROFILE,
-  GET_PROFILES,
-  GET_REPOS,
   PROFILE_ERROR,
   UPDATE_PROFILE,
-} from '../action/types';
+  GET_PROFILES,
+  GET_REPOS,
+  NO_REPOS,
+} from '../actions/types';
 
 const initialState = {
   profile: null,
@@ -15,15 +16,16 @@ const initialState = {
   error: {},
 };
 
-export default function profile(state = initialState, action) {
+function profileReducer(state = initialState, action) {
   const { type, payload } = action;
+
   switch (type) {
-    case UPDATE_PROFILE:
     case GET_PROFILE:
+    case UPDATE_PROFILE:
       return {
         ...state,
-        loading: false,
         profile: payload,
+        loading: false,
       };
     case GET_PROFILES:
       return {
@@ -31,26 +33,33 @@ export default function profile(state = initialState, action) {
         profiles: payload,
         loading: false,
       };
-    case GET_REPOS:
-      return {
-        ...state,
-        repos: payload,
-        loading: false,
-      };
     case PROFILE_ERROR:
       return {
         ...state,
-        loading: false,
         error: payload,
+        loading: false,
+        profile: null,
       };
     case CLEAR_PROFILE:
       return {
         ...state,
         profile: null,
         repos: [],
+      };
+    case GET_REPOS:
+      return {
+        ...state,
+        repos: payload,
         loading: false,
+      };
+    case NO_REPOS:
+      return {
+        ...state,
+        repos: [],
       };
     default:
       return state;
   }
 }
+
+export default profileReducer;
