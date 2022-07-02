@@ -113,7 +113,7 @@ export const createProfile =
 // Add experience
 export const addExperience = (formData, navigate) => async (dispatch) => {
   try {
-    const res = api.put('/profile/experience', formData);
+    const res = await api.put('/profile/experience', formData);
 
     dispatch({
       type: UPDATE_PROFILE,
@@ -142,7 +142,7 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 // Add education
 export const addEducation = (formData, navigate) => async (dispatch) => {
   try {
-    const res = api.put('/profile/education', formData);
+    const res = await api.put('/profile/education', formData);
 
     dispatch({
       type: UPDATE_PROFILE,
