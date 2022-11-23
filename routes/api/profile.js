@@ -4,7 +4,7 @@ const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
 const axios = require('axios');
-const config = require('config');
+require('dotenv').config();
 const normalize = require('normalize-url');
 const checkObjectId = require('../../middleware/checkObjectId');
 const { check, validationResult } = require('express-validator');
@@ -107,7 +107,7 @@ router.get('/', async (req, res) => {
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Errror');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -148,7 +148,7 @@ router.delete('/', auth, async (req, res) => {
     res.json({ msg: 'user deleted' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Errror');
+    res.status(500).send('Server Error');
   }
 });
 
@@ -269,7 +269,7 @@ router.get('/github/:username', async (req, res) => {
     );
     const headers = {
       'user-agent': 'node.js',
-      Authorization: `token ${config.get('githubToken')}`,
+      Authorization: `token ${process.env.JWT_SECRET}`,
     };
 
     const gitHubResponse = await axios.get(uri, { headers });
